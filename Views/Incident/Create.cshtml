@@ -1,0 +1,44 @@
+
+@model WebApplication2.Models.Incident
+
+@{
+    ViewData["Title"] = "Report New Incident";
+}
+
+<h1>Report New Incident</h1>
+
+<form asp-controller="Incident"
+      asp-action="Create"
+      method="post">
+<div asp-validation-summary="All"
+     class="text-danger mb-3"></div>
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Location" class="form-label"></label>
+        <input asp-for="Location" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Severity" class="form-label"></label>
+        <select asp-for="Severity" class="form-select">
+            <option value="">Select severity</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Report Incident
+    </button>
+
+    <a asp-controller="Incident"
+       asp-action="Index"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+</form>

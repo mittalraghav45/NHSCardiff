@@ -1,14 +1,39 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
+using WebApplication2.Models;
 namespace WebApplication2.Controllers
 {
     public class IncidentController : Controller
     {
-      
 
-public IActionResult Index()
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+ 
+
+[HttpPost]
+[ValidateAntiForgeryToken]
+public IActionResult Create(Incident incident)
 {
-    var incidents = new List<WebApplication2.Models.Incident>
+    if (!ModelState.IsValid)
+    {
+        return View(incident);
+    }
+
+    return Content(
+        $"Valid incident: {incident.Title}, " +
+        $"Location: {incident.Location}, " +
+        $"Severity: {incident.Severity}"
+    );
+}
+
+
+
+        public IActionResult Index()
+        {
+            var incidents = new List<WebApplication2.Models.Incident>
     {
         new WebApplication2.Models.Incident
         {
@@ -36,14 +61,14 @@ public IActionResult Index()
         }
     };
 
-    return View(incidents);
+            return View(incidents);
 
-    
-}
 
-public IActionResult Details(int id)
-{
-    var incidents = new List<WebApplication2.Models.Incident>
+        }
+
+        public IActionResult Details(int id)
+        {
+            var incidents = new List<WebApplication2.Models.Incident>
     {
         new() { Id = 101, Title = "Water contamination reported",
                 Location = "Cardiff", Severity = "High" },
@@ -55,15 +80,15 @@ public IActionResult Details(int id)
                 Location = "Newport", Severity = "Low" }
     };
 
-    var incident = incidents.FirstOrDefault(i => i.Id == id);
+            var incident = incidents.FirstOrDefault(i => i.Id == id);
 
-    if (incident == null)
-    {
-        return NotFound("Incident not found");
-    }
+            if (incident == null)
+            {
+                return NotFound("Incident not found");
+            }
 
-   return View(incident);
-}
+            return View(incident);
+        }
 
 
     }
