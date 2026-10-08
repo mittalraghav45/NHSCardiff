@@ -5,7 +5,14 @@
     ViewData["Title"] = "Incident Dashboard";
 }
 
-<h1>Health Protection Incidents</h1>
+
+<div class="mb-3">
+    <a asp-controller="Incident"
+       asp-action="Create"
+       class="btn btn-primary">
+        + Create New Incident
+    </a>
+</div>
 
 <table class="table table-striped">
     <thead>
@@ -22,6 +29,9 @@
     <tbody>
         @foreach (var incident in Model)
         {
+
+
+            
             <tr>
                 <td>@incident.Id</td>
 
