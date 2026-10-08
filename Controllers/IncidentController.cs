@@ -1,9 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication2.Models;
+using WebApplication2.Data;
 namespace WebApplication2.Controllers
 {
     public class IncidentController : Controller
     {
+
+
+        private readonly ApplicationDbContext _context;
+
+        public IncidentController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         [HttpGet]
         public IActionResult Create()
@@ -11,23 +20,23 @@ namespace WebApplication2.Controllers
             return View();
         }
 
- 
 
-[HttpPost]
-[ValidateAntiForgeryToken]
-public IActionResult Create(Incident incident)
-{
-    if (!ModelState.IsValid)
-    {
-        return View(incident);
-    }
 
-    return Content(
-        $"Valid incident: {incident.Title}, " +
-        $"Location: {incident.Location}, " +
-        $"Severity: {incident.Severity}"
-    );
-}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Incident incident)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(incident);
+            }
+
+            _context.Incidents.Add(incident);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
 
 
 
