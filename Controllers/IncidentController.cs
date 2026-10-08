@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using WebApplication2.Models;
 using WebApplication2.Data;
 namespace WebApplication2.Controllers
 {
     public class IncidentController : Controller
     {
-
-
         private readonly ApplicationDbContext _context;
-
         public IncidentController(ApplicationDbContext context)
         {
             _context = context;
@@ -38,58 +36,15 @@ namespace WebApplication2.Controllers
             return RedirectToAction("Index");
         }
 
-
-
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var incidents = new List<WebApplication2.Models.Incident>
-    {
-        new WebApplication2.Models.Incident
-        {
-            Id = 101,
-            Title = "Water contamination reported",
-            Location = "Cardiff",
-            Severity = "High",
-            ReportedAt = DateTime.Now
-        },
-        new WebApplication2.Models.Incident
-        {
-            Id = 102,
-            Title = "Food poisoning outbreak",
-            Location = "Swansea",
-            Severity = "Medium",
-            ReportedAt = DateTime.Now
-        },
-        new WebApplication2.Models.Incident
-        {
-            Id = 103,
-            Title = "Air quality concern",
-            Location = "Newport",
-            Severity = "Low",
-            ReportedAt = DateTime.Now
-        }
-    };
-
+            var incidents = await _context.Incidents.ToListAsync();
             return View(incidents);
-
-
         }
-
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var incidents = new List<WebApplication2.Models.Incident>
-    {
-        new() { Id = 101, Title = "Water contamination reported",
-                Location = "Cardiff", Severity = "High" },
-
-        new() { Id = 102, Title = "Food poisoning outbreak",
-                Location = "Swansea", Severity = "Medium" },
-
-        new() { Id = 103, Title = "Air quality concern",
-                Location = "Newport", Severity = "Low" }
-    };
-
-            var incident = incidents.FirstOrDefault(i => i.Id == id);
+            var incident = await _context.Incidents
+                .FirstOrDefaultAsync(i => i.Id == id);
 
             if (incident == null)
             {
@@ -99,6 +54,85 @@ namespace WebApplication2.Controllers
             return View(incident);
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var incident = await _context.Incidents.FindAsync(id);
+
+            if (incident == null)
+            {
+                return NotFound("Incident not found");
+            }
+
+            return View(incident);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Incident updatedIncident)
+        {
+            if (id != updatedIncident.Id)
+            {
+                return BadRequest("Incident ID mismatch");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(updatedIncident);
+            }
+
+            var incident = await _context.Incidents.FindAsync(id);
+
+            if (incident == null)
+            {
+                return NotFound("Incident not found");
+            }
+
+            incident.Title = updatedIncident.Title;
+            incident.Location = updatedIncident.Location;
+            incident.Severity = updatedIncident.Severity;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var incident = await _context.Incidents.FindAsync(id);
+
+            if (incident == null)
+            {
+                return NotFound("Incident not found");
+            }
+
+            return View(incident);
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var incident = await _context.Incidents.FindAsync(id);
+
+            if (incident == null)
+            {
+                return NotFound("Incident not found");
+            }
+
+            _context.Incidents.Remove(incident);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
 
     }
 }
