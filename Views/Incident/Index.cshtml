@@ -1,0 +1,40 @@
+
+@model List<WebApplication2.Models.Incident>
+
+@{
+    ViewData["Title"] = "Incident Dashboard";
+}
+
+<h1>Health Protection Incidents</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Location</th>
+            <th>Severity</th>
+            <th>Reported Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var incident in Model)
+        {
+            <tr>
+                <td>@incident.Id</td>
+                
+<td>
+    <a asp-controller="Incident"
+       asp-action="Details"
+       asp-route-id="@incident.Id">
+        @incident.Title
+    </a>
+</td>
+
+                <td>@incident.Location</td>
+                <td>@incident.Severity</td>
+                <td>@incident.ReportedAt.ToString("dd MMM yyyy")</td>
+            </tr>
+        }
+    </tbody>
+</table>

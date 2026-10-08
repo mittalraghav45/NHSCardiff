@@ -1,0 +1,46 @@
+
+# .NET build output
+bin/
+obj/
+artifacts/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code local settings
+.vscode/
+
+# JetBrains Rider
+.idea/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+*.pfx
+*.p12
+*.key
+
+# Logs
+*.log
+logs/
+
+# Test results
+TestResults/
+coverage/
+coverage.*
+
+# NuGet packages
+*.nupkg
+packages/
+
+# Operating system files
+.DS_Store
+Thumbs.db

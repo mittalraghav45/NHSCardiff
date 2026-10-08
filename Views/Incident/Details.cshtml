@@ -1,0 +1,25 @@
+
+@model WebApplication2.Models.Incident
+
+@{
+    ViewData["Title"] = "Incident Details";
+}
+
+<h1>Incident Details</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h3>@Model.Title</h3>
+
+        <p><strong>Incident ID:</strong> @Model.Id</p>
+        <p><strong>Location:</strong> @Model.Location</p>
+        <p><strong>Severity:</strong> @Model.Severity</p>
+        <p><strong>Reported:</strong> @Model.ReportedAt.ToString("dd MMM yyyy")</p>
+    </div>
+</div>
+
+<a asp-controller="Incident"
+   asp-action="Index"
+   class="btn btn-primary mt-3">
+    Back to Incidents
+</a>
