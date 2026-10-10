@@ -1,0 +1,43 @@
+
+services:
+  blazor:
+    image: health-protection-blazor
+    ports:
+      - "8080:8080"
+    environment:
+      IncidentApi__BaseUrl: "http://api:8080/"
+    depends_on:
+      - api
+    networks:
+      - health-network
+
+  api:
+    image: health-protection-api
+    ports:
+      - "127.0.0.1:5104:8080"
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sql,1433;Database=HealthProtectionDB;User Id=sa;Password=${SQL_PASSWORD};Encrypt=True;TrustServerCertificate=True;"
+    depends_on:
+      - sql
+    networks:
+      - health-network
+
+  sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      MSSQL_SA_PASSWORD: "${SQL_PASSWORD}"
+    ports:
+      - "127.0.0.1:1433:1433"
+    volumes:
+      - health-sql-data:/var/opt/mssql
+    networks:
+      - health-network
+
+networks:
+  health-network:
+
+volumes:
+  health-sql-data:
+    external: true

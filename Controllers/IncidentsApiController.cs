@@ -32,6 +32,13 @@ namespace WebApplication2.Controllers
         public async Task<IActionResult> CreateIncident(
             [FromBody] Incident incident)
         {
+
+            if (!IncidentValidator.IsValidSeverity(incident.Severity))
+            {
+                return BadRequest(
+                    "Severity must be Low, Medium, or High.");
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
